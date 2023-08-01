@@ -24,18 +24,26 @@ public class BikeTypeController {
     }
 
     public int insertBikeType(int id, String name,String description,Boolean electricType) {
+        int cnt = 0;
         try {
             cnt = bikeTypeModel.insertBikeType(id,name,electricType,description);
         } catch (SQLException ex) {
             System.err.println("Error: " + ex.toString());
         }
+        return cnt;
+    }
+
+    public void getTypesToTable(ObservableList<BikeType> data) throws SQLException {
+        bikeTypeModel.getTypesToTable(data);
     }
     
-    public void deleteBikeType(int id) {
+    public int deleteBikeType(int id) {
+        int cnt = 0;
         try {
             cnt = bikeTypeModel.deleteBikeType(id);
         } catch (SQLException ex) {
             System.err.println("Error: " + ex.toString());
         }
+        return cnt;
     }
 }

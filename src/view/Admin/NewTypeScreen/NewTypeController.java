@@ -52,18 +52,27 @@ public class NewTypeController implements Initializable {
         input_name.clear();
         input_type.setSelected(false);
         input_description.clear();
-        bikeTypeController.insertBikeType(Integer.parseInt(id),name,description,electricType);
-        getData();
+        int success = bikeTypeController.insertBikeType(Integer.parseInt(id),name,description,electricType);
+        if (success==0) {
+            System.out.println("Fail add");
+        } else {
+            data.clear();
+            getData();
+            System.out.println("Success add");
         }
+
+    }
     
     public void deleteType(ActionEvent event) throws SQLException, IOException {
         BikeType selectedItem = table.getSelectionModel().getSelectedItem();
-        if (selectedItem != null) {
-            int typeId = selectedItem.getId();
-
-            bikeTypeController.deleteBikeType(typeId);
+        int typeId = selectedItem.getId();
+        int success = bikeTypeController.deleteBikeType(typeId);
+        if (success == 0) {
+            System.out.println("Success delete");
+        } else {
             data.clear();
-                getData();
+            getData();
+            System.out.println("Fail delete");
         }
     }
 
@@ -84,5 +93,28 @@ public class NewTypeController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         getData();
+    }
+
+    public static boolean isNumeric(String strNum) {
+        if (strNum == null) {
+            return false;
+        }
+        try {
+            double d = Double.parseDouble(strNum);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean onlyLettersSpaces(String s){
+        for(int i=0;i<s.length();i++){
+            char ch = s.charAt(i);
+            if (Character.isLetter(ch) || ch == ' ') {
+                continue;
+            }
+            return false;
+        }
+        return true;
     }
 }
