@@ -52,27 +52,55 @@ public class NewTypeController implements Initializable {
         input_name.clear();
         input_type.setSelected(false);
         input_description.clear();
-        int success = bikeTypeController.insertBikeType(Integer.parseInt(id),name,description,electricType);
-        if (success==0) {
-            System.out.println("Fail add");
+        if(id.equals("") || name.equals("") || description.equals("")) {
+            AlertBox.display("You have not entered full information !!");
+        } else if(!isNumeric(id) || !onlyLettersSpaces(name)) {
+            AlertBox.display("Invalid input !!");
         } else {
-            data.clear();
-            getData();
-            System.out.println("Success add");
+            int success = bikeTypeController.insertBikeType(Integer.parseInt(id),name,description,electricType);
+            if (success==0) {
+                Alert a = new Alert(Alert.AlertType.ERROR);
+                a.setTitle("Failure!");
+                a.setHeaderText(null);
+                a.initOwner((Stage)((Node)event.getSource()).getScene().getWindow());
+                a.show();
+            } else {
+                data.clear();
+                getData();
+                Alert a = new Alert(Alert.AlertType.INFORMATION);
+                a.setTitle("Success!");
+                a.setHeaderText(null);
+                a.setContentText("Add new bike successfully !!");
+                a.initOwner((Stage)((Node)event.getSource()).getScene().getWindow());
+                a.show();
+            }
         }
-
     }
     
     public void deleteType(ActionEvent event) throws SQLException, IOException {
         BikeType selectedItem = table.getSelectionModel().getSelectedItem();
-        int typeId = selectedItem.getId();
-        int success = bikeTypeController.deleteBikeType(typeId);
-        if (success == 0) {
-            System.out.println("Success delete");
+        if (selectedItem != null) {
+            int typeId = selectedItem.getId();
+
+            int success = bikeTypeController.deleteBikeType(typeId);
+            if (success == 0) {
+                Alert a = new Alert(Alert.AlertType.ERROR);
+                a.setTitle("Failure!");
+                a.setHeaderText(null);
+                a.initOwner((Stage) ((Node) event.getSource()).getScene().getWindow());
+                a.show();
+            } else {
+                data.clear();
+                getData();
+                Alert a = new Alert(Alert.AlertType.INFORMATION);
+                a.setTitle("Success!");
+                a.setHeaderText(null);
+                a.setContentText("Successfully deleted bike type");
+                a.initOwner((Stage) ((Node) event.getSource()).getScene().getWindow());
+                a.show();
+            }
         } else {
-            data.clear();
-            getData();
-            System.out.println("Fail delete");
+            AlertBox.display("Select the type of bike to delete");
         }
     }
 
